@@ -1,0 +1,34 @@
+version: "3.3"
+services:
+  todolist-proxy:
+    image: traefik:1.7.9-alpine
+    container_name: todolist-proxy
+    hostname: todolist-proxy
+    ports: 
+      - "5000:80"
+    volumes:
+      - ./traefik.toml:/etc/traefik/traefik.toml
+    networks: 
+      - todolist
+  todolist-server:
+    image: vimagick/json-server
+    container_name: todolist-server
+    hostname: todolist-server
+    command: -H 0.0.0.0 -p 3000 -w db.json
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./db.json:/data/db.json
+    networks: 
+      - todolist
+  todolist-frontend:
+    image: slavic454/todolist-frontend:0.0.5
+    container_name: todolist-frontend
+    hostname: todolist-frontend
+    networks:
+      - todolist
+    ports:
+      - "80:4000"
+networks:
+  todolist:
+    external: true

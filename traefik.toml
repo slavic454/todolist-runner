@@ -1,0 +1,28 @@
+ 
+defaultEntryPoints = ["http"]
+
+logLevel = "DEBUG"
+
+[entryPoints]
+  [entryPoints.http]
+    address = ":80"
+
+[file]
+
+[backends]
+  [backends.todolist-server]
+    [backends.todolist-server.servers.server1]
+       url = "http://todolist-server:3000"
+  [backends.todolist-frontend]
+    [backends.todolist-frontend.servers.server1]
+       url = "http://todolist-frontend:80"
+   
+[frontends]
+  [frontends.todolist-server]
+      backend = "todolist-server"
+      [frontends.todolist-server.routes.route1]
+          rule = "PathPrefixStrip: /api/"
+  [frontends.todolist-frontend]
+      backend = "todolist-frontend"
+      [frontends.todolist-frontend.routes.route1]
+          rule = "PathPrefix: /"
